@@ -76,3 +76,13 @@ export const Register = async (req, res) => {
     });
   }
 };
+export const logout=async (req,res)=>{
+    try {
+        return res.status(200).cookie("token","",{expiresIn:new Date(Date.now()),httpOnly:true}).json({
+            success:true,
+            message:"Logout successful"
+        })
+    } catch (error) {
+        
+    }
+}
