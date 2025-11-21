@@ -1,21 +1,63 @@
 import React, { useState } from "react";
 import Header from "./Header";
-
+import axios from "axios";
+import { API_END_POINT } from "../utils/constant";
+import toast from "react-hot-toast";
+import {Navigate, useNavigate} from "react-router-dom"
 const Login = () => {
   const [isLogin, setLogin] = useState(false);
   const loginHandler = () => {
     setLogin(!isLogin);
   };
-  const [fullName, setFullname] = useState("");
+  const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const getInputData=(e)=>{
-   e.preventDefault()
-   console.log(fullName,email,password)
-   setEmail('')
-   setPassword('')
-   setFullname('')
-   }
+  const navigate=useNavigate()
+  const getInputData = async (e) => {
+    e.preventDefault();
+    if (isLogin) {
+      const user = { email, password };
+      try {
+        const res = await axios.post(`${API_END_POINT}/login`, user,{
+          headers:{
+            'Content-Type':'application/json'
+          },
+          withCredentials:true,
+        });
+         if(res.data.success){
+          toast.success(res.data.message)
+        }
+        navigate("/browse")
+        console.log(res);
+      } catch (error) {
+         toast.error(error.response.data.message)
+      }
+    } else {
+      try {
+        const user={  fullname,
+          email,
+          password,}
+        const res = await axios.post(`${API_END_POINT}/register`,user,{
+          headers:{
+            'Content-Type':'application/json'
+          },
+          withCredentials:true,
+        });
+        console.log(res);
+        if(res.data.success){
+          toast.success(res.data.message)
+        }
+        setLogin(true)
+      } catch (error) {
+        toast.error(error.response.data.message)
+        console.log(error);
+      }
+    }
+
+    setEmail("");
+    setPassword("");
+    setFullname("");
+  };
   return (
     <div>
       <Header />
@@ -38,7 +80,7 @@ const Login = () => {
           {!isLogin && (
             <input
               type="text"
-              value={fullName}
+              value={fullname}
               onChange={(e) => setFullname(e.target.value)}
               placeholder="Full Name"
               className="outline-none p-3 my-2 rounded-b-md bg-gray-700 text-white text-lg"

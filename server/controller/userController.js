@@ -31,7 +31,7 @@ export const Login=async(req,res)=>{
         const token =await jwt.sign(tokenData,process.env.screact_key,{expiresIn:"1d"})
         return res.status(200).cookie("token",token,{httpOnly:true}).json({
             success:true,
-            message:"Login successful",
+            message:`Login successful  ${user.fullname}`,
         })
     } catch (error) {
         console.log("error is login ")
@@ -66,7 +66,7 @@ export const Register = async (req, res) => {
      await newUser.save()
     return res.status(200).json({
         success:true,
-        newUser
+        message:"Register successful"
     })
   } catch (error) {
     console.log("Register error ");
