@@ -32,6 +32,7 @@ export const Login=async(req,res)=>{
         return res.status(200).cookie("token",token,{httpOnly:true}).json({
             success:true,
             message:`Login successful  ${user.fullname}`,
+            user,
         })
     } catch (error) {
         console.log("error is login ")
@@ -66,7 +67,8 @@ export const Register = async (req, res) => {
      await newUser.save()
     return res.status(200).json({
         success:true,
-        message:"Register successful"
+        message:"Register successful",
+      
     })
   } catch (error) {
     console.log("Register error ");
